@@ -1,2 +1,1 @@
-# yaha-lang
-Functional programming language
+# Yaha Programming Language
