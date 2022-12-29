@@ -1,4 +1,6 @@
 module Main where
 
+import Yaha.Compiller.Lexer (lexer)
+
 main :: IO ()
-main = putStrLn "Hello, Haskell!"
+main = print (lexer "105")
