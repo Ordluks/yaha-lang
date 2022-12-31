@@ -1,6 +1,6 @@
 module Yaha.Compiller.Lexer where
 
-import Text.Regex (mkRegex, matchRegex)
+import Text.Regex (mkRegex, matchRegexAll)
 import Yaha.Templates
 
 data Token = Token {
@@ -8,7 +8,7 @@ data Token = Token {
   value :: String
 } deriving (Show)  
 
-data TokenType = TNone | TInteger deriving (Show)
+data TokenType = TNone | TInteger deriving (Show, Eq)
 
 data LexicalRule = LexicalRule {
   pattern :: String,
@@ -18,7 +18,8 @@ data LexicalRule = LexicalRule {
 lr = LexicalRule
 
 lexicalRules = [
-  lr "[0-9]+" TNone]
+  lr "\\s+" TNone,
+  lr "[0-9]+" TInteger]
 
 lexer :: String -> [Token]
 lexer source = lexing 0 [] where
@@ -28,24 +29,22 @@ lexer source = lexing 0 [] where
     | pos < sourceLen  = lexing newPos newTokensAcc where
         token = matchToken pos
         newPos = pos + (length $ value token)
-        newTokensAcc = tokens ++ [token]
+        newTokensAcc = tokens ++ if (ttype token) == TNone
+          then []
+          else [token]
 
   matchToken pos = mappingRules 0 where
     sourceChunk = drop pos source
     rulesLen = length lexicalRules
     mappingRules i
-      | i >= rulesLen = error (unexpectedSymErr (head source) pos)
+      | i >= rulesLen = error (unexpectedSymErr (head sourceChunk) (pos + 1))
       | i < rulesLen  = token where
           rule = lexicalRules!!i
           regex = createRuleRegex rule
-          result = matchRegex regex sourceChunk
-
-          next = mappingRules $ (i + 1)
+          result = matchRegexAll regex sourceChunk
 
           token = case result of
-            Nothing  -> next
-            Just r -> if 0 < length r
-              then Token (resultType rule) (head r)
-              else next
+            Nothing  -> mappingRules $ (i + 1)
+            Just r -> Token (resultType rule) ((\(_, v, _, _) -> v) r)
 
 createRuleRegex = mkRegex . ((++) $ "^") . pattern
