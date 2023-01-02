@@ -1,4 +1,4 @@
-module Yaha.Compiller.Lexer where
+module Yaha.Compiller.Lexer (lexer, Token, TokenType) where
 
 import Text.Regex (mkRegex, matchRegexAll)
 import Yaha.Templates
