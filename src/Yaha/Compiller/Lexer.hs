@@ -1,4 +1,4 @@
-module Yaha.Compiller.Lexer (lexer, Token, TokenType) where
+module Yaha.Compiller.Lexer where
 
 import Text.Regex (mkRegex, matchRegexAll)
 import Yaha.Templates
@@ -6,7 +6,7 @@ import Yaha.Templates
 data Token = Token {
   ttype :: TokenType,
   value :: String
-} deriving (Show)  
+} deriving (Show, Eq) 
 
 data TokenType = TNone | TInteger deriving (Show, Eq)
 
