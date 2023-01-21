@@ -22,26 +22,25 @@ common shared
 library
   import: shared
   hs-source-dirs: src
-  exposed-modules: Yaha.Compiller.Lexer
-  other-modules: Yaha.Templates
+  exposed-modules: Yaha.Compiller
+  other-modules:
+    Yaha.Templates,
+    Yaha.Compiller.Lexer
 
 executable yaha
   import: shared
   hs-source-dirs: src
   main-is: Main.hs
   other-modules:
+    Yaha.Templates,
     Yaha.Compiller.Lexer
-    Yaha.Templates
 
 test-suite yaha-lang-test
   import: shared
   type: exitcode-stdio-1.0
-  hs-source-dirs: tests
-  main-is: Main.hs
+  hs-source-dirs: tests, src
+  build-depends:
+    HUnit == 1.6.2.0
+  main-is: Tests.hs
   other-modules:
     LexerTest
-  build-depends:
-    base            >=4.13 && <4.14,
-    HUnit,
-    yaha-lang
-  default-language: Haskell2010

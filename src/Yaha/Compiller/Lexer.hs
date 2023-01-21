@@ -1,4 +1,8 @@
-module Yaha.Compiller.Lexer where
+module Yaha.Compiller.Lexer (
+  Token (..),
+  TokenType (..),
+  lexer
+) where
 
 import Text.Regex (mkRegex, matchRegexAll)
 import Yaha.Templates
@@ -8,18 +12,27 @@ data Token = Token {
   value :: String
 } deriving (Show, Eq) 
 
-data TokenType = TNone | TInteger deriving (Show, Eq)
+data TokenType = TNone
+  | TInteger
+  | TFloat
+  | TString
+  | TChar
+  | TName
+  deriving (Show, Eq)
 
 data LexicalRule = LexicalRule {
   pattern :: String,
   resultType :: TokenType
 }
 
-lr = LexicalRule
+makeLexicalRules :: [(String, TokenType)] -> [LexicalRule]
+makeLexicalRules list = map (\ (p, t) -> LexicalRule p t) list
 
-lexicalRules = [
-  lr "\\s+" TNone,
-  lr "[0-9]+" TInteger]
+lexicalRules = makeLexicalRules [
+  ("\\s+", TNone),
+  ("[0-9]+\\.[0-9]+", TFloat),
+  ("[0-9]+", TInteger),
+  ("\".*\"", TString)]
 
 lexer :: String -> [Token]
 lexer source = lexing 0 [] where
