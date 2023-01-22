@@ -32,7 +32,8 @@ lexicalRules = makeLexicalRules [
   ("\\s+", TNone),
   ("[0-9]+\\.[0-9]+", TFloat),
   ("[0-9]+", TInteger),
-  ("\".*\"", TString)]
+  ("\".*\"", TString)
+  ]
 
 lexer :: String -> [Token]
 lexer source = lexing 0 [] where

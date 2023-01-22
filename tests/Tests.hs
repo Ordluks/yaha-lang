@@ -2,7 +2,7 @@ import Test.HUnit
 import System.Exit
 import LexerTest
 
-tests = TestList [testLexingInteger]
+tests = TestList lexerTests
 
 main = do
   (Counts _ _ errs fails) <- runTestTT tests

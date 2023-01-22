@@ -14,10 +14,18 @@ build-type: Simple
 extra-source-files: CHANGELOG.md, README.md
 
 common shared
+  hs-source-dirs: src
   build-depends:
-    base            >=4.13 && <4.14,
-    regex-compat    >= 0.95.2.1
+    base >=4.13 && <4.14,
+    regex-compat >= 0.95.2.1
   default-language: Haskell2010
+
+common exec
+  import: shared
+  other-modules:
+    Yaha.Templates,
+    Yaha.Compiller,
+    Yaha.Compiller.Lexer
 
 library
   import: shared
@@ -28,15 +36,11 @@ library
     Yaha.Compiller.Lexer
 
 executable yaha
-  import: shared
-  hs-source-dirs: src
+  import: exec
   main-is: Main.hs
-  other-modules:
-    Yaha.Templates,
-    Yaha.Compiller.Lexer
 
 test-suite yaha-lang-test
-  import: shared
+  import: exec
   type: exitcode-stdio-1.0
   hs-source-dirs: tests, src
   build-depends:

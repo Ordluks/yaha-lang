@@ -6,4 +6,8 @@ import Yaha.Compiller.Lexer
 
 createLexerTest tokenType text = TestCase (assertEqual (printf "Test lexing %s" (show tokenType)) [Token tokenType text] (lexer text))
     
-testLexingInteger = createLexerTest TInteger "*573"
+lexerTests = [
+  TestCase (assertEqual "Test lexing tabulation" [] (lexer "   ")),
+  createLexerTest TFloat "3.79",
+  createLexerTest TInteger "54"
+  ]
